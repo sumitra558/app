@@ -1,42 +1,32 @@
-# Project configuration
-#nandu
-#nandu1
-#nandu2
 general:
   inferBuildTool: true
   productiveBranch: 'main'
 
-# Stage configuration
 stages:
   'Confirm':
     manualConfirmation: false
 
-#  npmAudit:
-#    auditedAdvisories:
+  productionDeployment: # Modified Stage
+    # cfTargets:  REMOVE THIS ENTIRE SECTION
+    #   - appName: 'app'
+    #     org: 'facd30cetrial'
+    #     space: 'dev'
+    #     apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
+    #     credentialsId: 'deploy-to-cf'
 
-#  lint:
-#    ui5BestPractices:
-#      failThreshold:
-#        error: <THRESHOLD>
-#        warning: <THRESHOLD>
-#        info: <THRESHOLD>
-
-# deploy to Cloud Foundry
-  productionDeployment:
-    cfTargets:
-      - appName: 'app'
-        org: 'facd30cetrial'
-        space: 'dev'
-        apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
-        credentialsId: 'deploy-to-cf'
-
-# Step configuration
 steps:
   mavenExecute:
     dockerImage: devxci/mbtci:1.0.14
 
   artifactPrepareVersion:
     versioningType: cloud_noTag
+
+  cloudFoundryDeploy: # New Step for MTA Deployment
+    mtaFilePath: 'mta.yaml'  # Path to your mta.yaml file (usually in the root)
+    org: 'facd30cetrial'        # Your Cloud Foundry organization
+    space: 'dev'              # Your Cloud Foundry space
+    cfApiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com' # Your CF API endpoint
+    credentialsId: 'deploy-to-cf' # ID of your Cloud Foundry credentials in Jenkins
 
 # transport management upload
 #  tmsUpload:
