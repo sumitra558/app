@@ -2,33 +2,24 @@ general:
   inferBuildTool: true
   productiveBranch: 'main'
 
-stages:
-  'Confirm':
-    manualConfirmation: false
+# ... other config ...
 
-  productionDeployment: # Modified Stage
-    # cfTargets:  REMOVE THIS ENTIRE SECTION
-    #   - appName: 'app'
-    #     org: 'facd30cetrial'
-    #     space: 'dev'
-    #     apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
-    #     credentialsId: 'deploy-to-cf'
+stages:
+  productionDeployment:
+    # REMOVE cloudFoundryDeploy step completely
 
 steps:
-  mavenExecute:
+  mavenExecute:  # Your existing Maven build step
     dockerImage: devxci/mbtci:1.0.14
 
-  artifactPrepareVersion:
+  artifactPrepareVersion:  # Your existing versioning step
     versioningType: cloud_noTag
 
-  cloudFoundryDeploy: # New Step for MTA Deployment
-    mtaFilePath: 'mta.yaml'  # Path to your mta.yaml file (usually in the root)
-    org: 'facd30cetrial'        # Your Cloud Foundry organization
-    space: 'dev'              # Your Cloud Foundry space
-    cfApiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com' # Your CF API endpoint
-    credentialsId: 'deploy-to-cf' # ID of your Cloud Foundry credentials in Jenkins
-    deployType: 'mta'
-    
+  deployToCF: # New shell script step
+    sh: |
+      cf login -a ${CF_API_ENDPOINT} -o ${CF_ORG} -s ${CF_SPACE} -u ${CF_USERNAME} -p ${CF_PASSWORD}
+      cf deploy mta.yaml --no-confirm # Or any other cf deploy options you need
+      cf logout
 # transport management upload
 #  tmsUpload:
 #    nodeName: 'dev'
