@@ -27,7 +27,8 @@ steps:
     space: 'dev'              # Your Cloud Foundry space
     cfApiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com' # Your CF API endpoint
     credentialsId: 'deploy-to-cf' # ID of your Cloud Foundry credentials in Jenkins
-
+    deployType: 'mta'
+    
 # transport management upload
 #  tmsUpload:
 #    nodeName: 'dev'
